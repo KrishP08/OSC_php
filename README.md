@@ -6,7 +6,7 @@
 **Online Smart Class (OSC)** is a PHP-based e-learning platform designed for students and teachers. It offers a complete learning management system with course management, assignments, quizzes, live lectures, discussion forums, and more.
 
 ## Features
-###**For Students:**
+### **For Students:**
 - Dashboard for course access
 - View and enroll in courses
 - Watch course videos
