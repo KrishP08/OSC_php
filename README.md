@@ -2,11 +2,11 @@
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-OSC_php-blue?style=flat&logo=github)](https://github.com/KrishP08/OSC_php)
 
-## ðŸ“Œ About OSC
+## About OSC
 **Online Smart Class (OSC)** is a PHP-based e-learning platform designed for students and teachers. It offers a complete learning management system with course management, assignments, quizzes, live lectures, discussion forums, and more.
 
-## ðŸ”¥ Features
-### ðŸ‘¨â€ðŸŽ“ **For Students:**
+## Features
+###**For Students:**
 - Dashboard for course access
 - View and enroll in courses
 - Watch course videos
@@ -17,7 +17,7 @@
 - Join live lectures
 - Participate in discussions and live chat
 
-### ðŸ‘¨â€ðŸ« **For Teachers:**
+### **For Teachers:**
 - Dashboard to manage courses
 - Create and manage quizzes
 - Upload course materials and videos
@@ -27,13 +27,13 @@
 - Evaluate assignments and quizzes
 - Communicate via discussion forum and live chat
 
-## ðŸ› ï¸ Tech Stack
+## Tech Stack
 - **Frontend:** HTML, CSS, JavaScript
 - **Backend:** PHP
 - **Database:** MySQL
 - **Other:** AJAX, jQuery
 
-## ðŸš€ Installation
+## Installation
 1. **Clone the repository**
    ```bash
    git clone https://github.com/KrishP08/OSC_php.git
@@ -54,16 +54,16 @@
    http://localhost/OSC_php
    ```
 
-## ðŸŽ¯ Future Enhancements
+## Future Enhancements
 - Add video conferencing for live classes
 - Implement AI-based learning recommendations
 - Mobile app integration
 
-## ðŸ“œ License
+## License
 This project is open-source. Feel free to modify and contribute!
 
-## ðŸ¤ Contributing
+## Contributing
 Pull requests are welcome. For major changes, open an issue first to discuss improvements.
 
-## ðŸ“§ Contact
+## Contact
 For any queries, reach out via GitHub Issues or email me at **[7233kp@gmail.com]**.
