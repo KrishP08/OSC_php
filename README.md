@@ -36,116 +36,116 @@
 # E-Learning Website Screenshots  
 
 ## Index,Login & Register  
-![Index](Screenshort/index.png)  
+![Index](Screenshort/Index.png)  
 ![Login](Screenshort/login.pnd)  
 ![Register](Screenshort/signup.png)  
 
 ## Teacher Screenshots  
 <details>
-  <summary>TAQ</summary>
+  <summary>Add Questions Quiz</summary>
   <img src="Screenshort/teacher/TAQ.png" width="600">
 </details>
 
 <details>
-  <summary>TCNQ</summary>
+  <summary>Create New Quiz</summary>
   <img src="Screenshort/teacher/TCNQ.png" width="600">
 </details>
 
 <details>
-  <summary>TcreateeC</summary>
+  <summary>Create New Course</summary>
   <img src="Screenshort/teacher/TcreateeC.png" width="600">
 </details>
 
 <details>
-  <summary>tD</summary>
+  <summary>Dashboard</summary>
   <img src="Screenshort/teacher/tD.png" width="600">
 </details>
 
 <details>
-  <summary>TGA</summary>
+  <summary>Give Assignment</summary>
   <img src="Screenshort/teacher/TGA.png" width="600">
 </details>
 
 <details>
-  <summary>TQR</summary>
+  <summary>Quiz Results</summary>
   <img src="Screenshort/teacher/TQR.png" width="600">
 </details>
 
 <details>
-  <summary>tSLL</summary>
+  <summary>Schedule Live Lecture</summary>
   <img src="Screenshort/teacher/tSLL.png" width="600">
 </details>
 
 <details>
-  <summary>TUCM</summary>
+  <summary>Upload Courese Material</summary>
   <img src="Screenshort/teacher/TUCM.png" width="600">
 </details>
 
 <details>
-  <summary>TUCV</summary>
+  <summary>Upload Course Video</summary>
   <img src="Screenshort/teacher/TUCV.png" width="600">
 </details>
 
 <details>
-  <summary>TUDS</summary>
+  <summary>Unlock Disqualified Students</summary>
   <img src="Screenshort/teacher/TUDS.png" width="600">
 </details>
 
 <details>
-  <summary>TVS</summary>
+  <summary>View Submissions</summary>
   <img src="Screenshort/teacher/TVS.png" width="600">
 </details>
 
 ## Student Screenshots  
 <details>
-  <summary>SAC</summary>
+  <summary>Available Courses</summary>
   <img src="Screenshort/student/SAC.png" width="600">
 </details>
 
 <details>
-  <summary>SAT</summary>
+  <summary>attend the test</summary>
   <img src="Screenshort/student/SAT.png" width="600">
 </details>
 
 <details>
-  <summary>SCD</summary>
+  <summary>Course Detail</summary>
   <img src="Screenshort/student/SCD1.png" width="600">
   <img src="Screenshort/student/SCD2.png" width="600">
 </details>
 
 <details>
-  <summary>SCV</summary>
+  <summary>Course Videos</summary>
   <img src="Screenshort/student/SCV.png" width="600">
 </details>
 
 <details>
-  <summary>SD</summary>
+  <summary>Dashboard</summary>
   <img src="Screenshort/student/SD1.png" width="600">
   <img src="Screenshort/student/SD2.png" width="600">
 </details>
 
 <details>
-  <summary>SDCM</summary>
+  <summary>Download Course Materials</summary>
   <img src="Screenshort/student/SDCM.png" width="600">
 </details>
 
 <details>
-  <summary>SLL</summary>
+  <summary>Live Lectures</summary>
   <img src="Screenshort/student/SLL.png" width="600">
 </details>
 
 <details>
-  <summary>SQR</summary>
+  <summary>Quiz Results</summary>
   <img src="Screenshort/student/SQR.png" width="600">
 </details>
 
 <details>
-  <summary>SUA</summary>
+  <summary>Upload Assignment</summary>
   <img src="Screenshort/student/SUA.png" width="600">
 </details>
 
 <details>
-  <summary>SVG</summary>
+  <summary>View Grades</summary>
   <img src="Screenshort/student/SVG.png" width="600">
 </details>
 
