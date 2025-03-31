@@ -36,9 +36,9 @@
 # E-Learning Website Screenshots  
 
 ## Index,Login & Register  
-![Index](Screenshort/index.png)  
-![Login](Screenshort/login.pnd)  
-![Register](Screenshort/signup.png)  
+![Index](./Screenshort/index.png)  
+![Login](./Screenshort/login.pnd)  
+![Register](./Screenshort/signup.png)  
 
 ## Teacher Screenshots  
 <details>
