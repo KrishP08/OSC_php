@@ -37,7 +37,7 @@
 
 ## Index,Login & Register  
 ![Index](Screenshort/Index.png)  
-![Login](Screenshort/login.pnd)  
+![Login](Screenshort/Login.png)  
 ![Register](Screenshort/signup.png)  
 
 ## Teacher Screenshots  
