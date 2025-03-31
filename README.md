@@ -32,6 +32,122 @@
 - **Backend:** PHP
 - **Database:** MySQL
 - **Other:** AJAX, jQuery
+  
+# E-Learning Website Screenshots  
+
+## Index & Login  
+![Index](Screenshort/Index.png)  
+![Login](Screenshort/Login.pnd)  
+![Register](Screenshort/signup.png)  
+
+## Teacher Screenshots  
+<details>
+  <summary>TAQ</summary>
+  <img src="Screenshort/teacher/TAQ.png" width="600">
+</details>
+
+<details>
+  <summary>TCNQ</summary>
+  <img src="Screenshort/teacher/TCNQ.png" width="600">
+</details>
+
+<details>
+  <summary>TcreateeC</summary>
+  <img src="Screenshort/teacher/TcreateeC.png" width="600">
+</details>
+
+<details>
+  <summary>tD</summary>
+  <img src="Screenshort/teacher/tD.png" width="600">
+</details>
+
+<details>
+  <summary>TGA</summary>
+  <img src="Screenshort/teacher/TGA.png" width="600">
+</details>
+
+<details>
+  <summary>TQR</summary>
+  <img src="Screenshort/teacher/TQR.png" width="600">
+</details>
+
+<details>
+  <summary>tSLL</summary>
+  <img src="Screenshort/teacher/tSLL.png" width="600">
+</details>
+
+<details>
+  <summary>TUCM</summary>
+  <img src="Screenshort/teacher/TUCM.png" width="600">
+</details>
+
+<details>
+  <summary>TUCV</summary>
+  <img src="Screenshort/teacher/TUCV.png" width="600">
+</details>
+
+<details>
+  <summary>TUDS</summary>
+  <img src="Screenshort/teacher/TUDS.png" width="600">
+</details>
+
+<details>
+  <summary>TVS</summary>
+  <img src="Screenshort/teacher/TVS.png" width="600">
+</details>
+
+## Student Screenshots  
+<details>
+  <summary>SAC</summary>
+  <img src="Screenshort/student/SAC.png" width="600">
+</details>
+
+<details>
+  <summary>SAT</summary>
+  <img src="Screenshort/student/SAT.png" width="600">
+</details>
+
+<details>
+  <summary>SCD</summary>
+  <img src="Screenshort/student/SCD1.png" width="600">
+  <img src="Screenshort/student/SCD2.png" width="600">
+</details>
+
+<details>
+  <summary>SCV</summary>
+  <img src="Screenshort/student/SCV.png" width="600">
+</details>
+
+<details>
+  <summary>SD</summary>
+  <img src="Screenshort/student/SD1.png" width="600">
+  <img src="Screenshort/student/SD2.png" width="600">
+</details>
+
+<details>
+  <summary>SDCM</summary>
+  <img src="Screenshort/student/SDCM.png" width="600">
+</details>
+
+<details>
+  <summary>SLL</summary>
+  <img src="Screenshort/student/SLL.png" width="600">
+</details>
+
+<details>
+  <summary>SQR</summary>
+  <img src="Screenshort/student/SQR.png" width="600">
+</details>
+
+<details>
+  <summary>SUA</summary>
+  <img src="Screenshort/student/SUA.png" width="600">
+</details>
+
+<details>
+  <summary>SVG</summary>
+  <img src="Screenshort/student/SVG.png" width="600">
+</details>
 
 ## Installation
 1. **Clone the repository**
