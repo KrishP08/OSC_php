@@ -341,6 +341,10 @@ $lectures = $stmt->fetchAll(PDO::FETCH_ASSOC);
             .back-button {
                 width: 100%;
             }
+            a {
+            text-decoration: none; /* Removes underline */
+            color: black; /* Changes link color to blue */
+                    }
         }
     </style>
 </head>
@@ -363,7 +367,7 @@ $lectures = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </defs>
                         </svg>
                     </div>
-                    <span class="nav-label">Home</span>
+                    <span class="nav-label"><a href="dashboard.php">Home</a></span>
                 </li>
                 <li class="nav-item">
                     <div class="nav-icon-container">

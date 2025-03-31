@@ -7,11 +7,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     exit();
 }
 
-if (!isset($_GET['course_id'])) {
+if (!isset($_GET['course_id']) && !isset($_GET['id'])) {
     die("Course not found.");
 }
 
-$course_id = $_GET['course_id'];
+
+$user_id = $_SESSION['user_id']; // Get user ID from session
+$course_id = $_GET['id'] ?? 0; // Get course ID from URL, default to 0
+
+// Check if the user is enrolled in the course
+$stmt = $conn->prepare("SELECT * FROM enrollments WHERE student_id = ? AND course_id = ?");
+$stmt->execute([$user_id, $course_id]);
+$is_enrolled = $stmt->fetch();
+
+if (!$is_enrolled) {
+    // Redirect to course preview if not enrolled
+    header("Location: course_preview.php?id=$course_id");
+    exit();
+}
 
 // Check if student is enrolled in this course
 $sql_check = "SELECT COUNT(*) FROM enrollments WHERE student_id = ? AND course_id = ?";
@@ -19,9 +32,6 @@ $stmt = $conn->prepare($sql_check);
 $stmt->execute([$_SESSION['user_id'], $course_id]);
 $is_enrolled = $stmt->fetchColumn();
 
-if (!$is_enrolled) {
-    die("You are not enrolled in this course.");
-}
 
 // Fetch course details
 $sql = "SELECT title, description FROM courses WHERE id = ?";
@@ -574,5 +584,6 @@ if ($user_data) {
             </main>
         </div>
     </div>
+    <script src="navigation.js"></script>
 </body>
 </html>
