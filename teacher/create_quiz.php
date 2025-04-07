@@ -10,13 +10,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $course_id = $_POST['course_id'];
     $title = $_POST['title'];
+    $time_limit = $_POST['time_limit'];
+    $allow_review = isset($_POST['allow_review']) ? 1 : 0; // checkbox logic
 
     //  Fixed SQL for PDO
-    $sql = "INSERT INTO quizzes (course_id, teacher_id, title) VALUES (:course_id, :teacher_id, :title)";
+    $sql = "INSERT INTO quizzes (course_id, teacher_id, title,time_limit, allow_review) VALUES (:course_id, :teacher_id, :title,:time_limit, :allow_review)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(":course_id", $course_id, PDO::PARAM_INT);
     $stmt->bindParam(":teacher_id", $_SESSION['user_id'], PDO::PARAM_INT);
     $stmt->bindParam(":title", $title, PDO::PARAM_STR);
+    $stmt->bindParam(":time_limit", $time_limit, PDO::PARAM_INT);
+    $stmt->bindParam(":allow_review", $allow_review, PDO::PARAM_BOOL);
 
     if ($stmt->execute()) {
         $success_message = "Quiz created successfully!";
@@ -281,6 +285,66 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 padding: 20px;
             }
         }
+        /* Time limit specific styles */
+        .time-limit-container {
+        background-color: #f0f2f5;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        }
+
+        .time-limit-container label {
+        color: #121417;
+        margin-bottom: 12px;
+        }
+
+        .time-limit-container input[type="number"] {
+        background-color: #fff;
+        border: 1px solid #dbe0e5;
+        }
+
+        /* Review options specific styles */
+        .review-options-container {
+        background-color: #f0f2f5;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        }
+
+        .review-options-container label {
+        color: #121417;
+        margin-bottom: 12px;
+        }
+
+        .review-options-container select {
+        background-color: #fff;
+        border: 1px solid #dbe0e5;
+        cursor: pointer;
+        }
+
+        /* Submit button styles */
+        input[type="submit"] {
+        width: 100%;
+        height: 40px;
+        background-color: #0d7df2;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-family: "Lexend", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 21px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        }
+
+        input[type="submit"]:hover {
+        background-color: #0b6cd3;
+        }
+
+        input[type="submit"]:active {
+        background-color: #0a5cb4;
+        }
 
         @media (max-width: 640px) {
             .main-header {
@@ -433,7 +497,18 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label">Quiz Title:</label>
                             <input type="text" name="title" class="form-input" required>
                         </div>
+                        <div class="time-limit-container">
+                        <label>Time Limit (in minutes):</label><br>
+                        <input type="number" name="time_limit" min="1" required>
+                    </div>
 
+                    <div class="review-options-container">
+                        <label>Allow student to view questions and answers after quiz?</label><br>
+                        <select name="allow_review" class="form-select">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
                         <button type="submit" class="form-button">Create Quiz</button>
                     </form>
 
