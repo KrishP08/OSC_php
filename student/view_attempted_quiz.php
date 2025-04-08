@@ -253,6 +253,13 @@ if ($selected_course) {
 
         <?php
         if ($selected_quiz) {
+            $checkQuiz = $conn->prepare("SELECT show_answers FROM quizzes WHERE id = ?");
+            $checkQuiz->execute([$selected_quiz]);
+            $quizSettings = $checkQuiz->fetch(PDO::FETCH_ASSOC);
+        
+            if (!$quizSettings || $quizSettings['show_answers'] == 0) {
+                echo "<div class='no-quiz-selected'>The teacher has not allowed viewing answers for this quiz at this time.</div>";
+            } else {
             $stmt = $conn->prepare("
                 SELECT q.id AS question_id, q.question_text, q.correct_option, sa.selected_option
                 FROM questions q
@@ -295,6 +302,7 @@ if ($selected_course) {
                 endforeach;
                 echo "</div>";
             endforeach;
+        }
         } else {
             echo "<div class='no-quiz-selected'>Please select a course and quiz to view your attempts.</div>";
         }
