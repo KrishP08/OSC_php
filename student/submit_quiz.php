@@ -12,6 +12,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id = $_SESSION['user_id'];
     $answers = $_POST['answers'];
 
+    // ✅ Step 1: Remove old answers and results
+    $sql = "DELETE FROM student_answers WHERE student_id = :student_id AND quiz_id = :quiz_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':student_id' => $student_id,
+        ':quiz_id' => $quiz_id
+    ]);
+
+    $sql = "DELETE FROM quiz_results WHERE student_id = :student_id AND quiz_id = :quiz_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':student_id' => $student_id,
+        ':quiz_id' => $quiz_id
+    ]);
+
+    // ✅ Step 2: Recalculate score and insert updated answers
     $score = 0;
     $total_questions = count($answers);
 
@@ -22,35 +38,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$question_id]);
         $correct_option = $stmt->fetchColumn();
 
-        // Check if the answer is correct
         $is_correct = ($selected_option == $correct_option) ? 1 : 0;
         if ($is_correct) {
             $score++;
         }
-        
-        // Store student answer
+
+        // Insert student's answer
         $sql = "INSERT INTO student_answers (student_id, quiz_id, question_id, selected_option, is_correct) 
                 VALUES (:student_id, :quiz_id, :question_id, :selected_option, :is_correct)";
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(":student_id", $student_id, PDO::PARAM_INT);
-        $stmt->bindValue(":quiz_id", $quiz_id, PDO::PARAM_INT);
-        $stmt->bindValue(":question_id", $question_id, PDO::PARAM_INT);
-        $stmt->bindValue(":selected_option", $selected_option, PDO::PARAM_INT);
-        $stmt->bindValue(":is_correct", $is_correct, PDO::PARAM_INT);
-        $stmt->execute();
+        $stmt->execute([
+            ':student_id' => $student_id,
+            ':quiz_id' => $quiz_id,
+            ':question_id' => $question_id,
+            ':selected_option' => $selected_option,
+            ':is_correct' => $is_correct
+        ]);
     }
 
-    // Store quiz result
+    // ✅ Step 3: Save new result
     $percentage = ($score / $total_questions) * 100;
     $sql = "INSERT INTO quiz_results (student_id, quiz_id, score, total_questions, percentage) 
             VALUES (:student_id, :quiz_id, :score, :total_questions, :percentage)";
     $stmt = $conn->prepare($sql);
-    $stmt->bindValue(":student_id", $student_id, PDO::PARAM_INT);
-    $stmt->bindValue(":quiz_id", $quiz_id, PDO::PARAM_INT);
-    $stmt->bindValue(":score", $score, PDO::PARAM_INT);
-    $stmt->bindValue(":total_questions", $total_questions, PDO::PARAM_INT);
-    $stmt->bindValue(":percentage", $percentage, PDO::PARAM_STR); // Float value
-    $stmt->execute();
+    $stmt->execute([
+        ':student_id' => $student_id,
+        ':quiz_id' => $quiz_id,
+        ':score' => $score,
+        ':total_questions' => $total_questions,
+        ':percentage' => $percentage
+    ]);
 
     header("Location: view_result.php?quiz_id=$quiz_id");
     exit();

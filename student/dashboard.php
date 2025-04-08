@@ -511,6 +511,15 @@ $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
           <a href="view_grades.php" class="action-button">View</a>
         </section>
+        <section class="action-card">
+          <div>
+            <h3 class="card-title">View Quiz Result</h3>
+            <p class="card-description">
+              See your grades on assignments and quizzes
+            </p>
+          </div>
+          <a href="view_attempted_quiz.php" class="action-button">View</a>
+        </section>
 
         <section class="action-card">
           <div>

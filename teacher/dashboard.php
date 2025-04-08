@@ -719,7 +719,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                     alt=""
                   />
                 </div>
-                <span class="footer-text"><a href="create_course.php">Create a Course</a></span>
+                <span class="footer-text"><a href="edit_quiz&edit_questions.php">Edit Quiz and Questions</a></span>
               </div>
               <div class="footer-item">
                 <div class="footer-icon">

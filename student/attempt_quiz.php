@@ -9,11 +9,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
 
 $quiz_id = $_GET['quiz_id'] ?? null;
 $student_id = $_SESSION['user_id'] ?? null;
-
+$time_limit = $_GET['time_limit'] ?? null;
 if (!$student_id) {
     die("Invalid request.");
 }
+$sql = "SELECT time_limit FROM quizzes WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->execute([$quiz_id]);
+$time_limit_min = $stmt->fetchColumn(); // in minutes
 
+$time_limit_seconds = $time_limit_min * 60; // convert to seconds
 // ❌ Check if the student is disqualified
 $sql = "SELECT disqualified FROM violations WHERE student_id = ? AND quiz_id = ?";
 $stmt = $conn->prepare($sql);
@@ -749,7 +754,7 @@ a {
         let studentId = <?php echo json_encode($_SESSION['user_id'] ?? null); ?>;
         let quizId = <?php echo json_encode($quiz_id ?? null); ?>;
         let timerInterval;
-        let timeLeft = 180; // 3 minutes in seconds
+        let timeLeft = <?php echo $time_limit_seconds; ?>; // 3 minutes in seconds
 
         document.addEventListener("DOMContentLoaded", function () {
             let startQuizBtn = document.getElementById("startQuizBtn");
