@@ -253,11 +253,11 @@ if ($selected_course) {
 
         <?php
         if ($selected_quiz) {
-            $checkQuiz = $conn->prepare("SELECT show_answers FROM quizzes WHERE id = ?");
+            $checkQuiz = $conn->prepare("SELECT allow_review FROM quizzes WHERE id = ?");
             $checkQuiz->execute([$selected_quiz]);
             $quizSettings = $checkQuiz->fetch(PDO::FETCH_ASSOC);
         
-            if (!$quizSettings || $quizSettings['show_answers'] == 0) {
+            if (!$quizSettings || $quizSettings['allow_review'] == 0) {
                 echo "<div class='no-quiz-selected'>The teacher has not allowed viewing answers for this quiz at this time.</div>";
             } else {
             $stmt = $conn->prepare("
