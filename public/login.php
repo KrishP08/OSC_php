@@ -13,10 +13,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role'];
+        $_SESSION['user_name'] = $user['name'];
 
         if ($user['role'] === 'teacher') {
             header("Location: ../teacher/dashboard.php");
-        } else {
+        } elseif ($user['role'] === 'quiz_only') {
+          header("Location: ../quiz/dashboard.php");
+        } else{
             header("Location: ../student/dashboard.php");
         }
         exit();

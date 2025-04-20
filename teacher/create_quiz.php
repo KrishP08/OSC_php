@@ -14,12 +14,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $allow_review = isset($_POST['allow_review']) ? 1 : 0; // checkbox logic
 
     //  Fixed SQL for PDO
-    $sql = "INSERT INTO quizzes (course_id, teacher_id, title,time_limit, allow_review) VALUES (:course_id, :teacher_id, :title,:time_limit, :allow_review)";
+    $sql = "INSERT INTO quizzes (course_id, teacher_id, title,time_limit, allow_review,max_attempts) VALUES (:course_id, :teacher_id, :title,:time_limit, :allow_review,:max_attempts)";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(":course_id", $course_id, PDO::PARAM_INT);
     $stmt->bindParam(":teacher_id", $_SESSION['user_id'], PDO::PARAM_INT);
     $stmt->bindParam(":title", $title, PDO::PARAM_STR);
     $stmt->bindParam(":time_limit", $time_limit, PDO::PARAM_INT);
+    $stmt->bindParam(":max_attempts", $max_attempts, PDO::PARAM_INT);
     $stmt->bindParam(":allow_review", $allow_review, PDO::PARAM_BOOL);
 
     if ($stmt->execute()) {
@@ -497,12 +498,16 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label class="form-label">Quiz Title:</label>
                             <input type="text" name="title" class="form-input" required>
                         </div>
-                        <div class="time-limit-container">
-                        <label>Time Limit (in minutes):</label><br>
-                        <input type="number" name="time_limit" min="1" required>
+                        <div class="form-group">
+                        <label class="form-label">Time Limit (in minutes):</label><br>
+                        <input class="form-input"  type="number" name="time_limit" min="1" required>
+                    </div>
+                        <div class="form-group">
+                        <label class="form-label" for="max_attempts">Max Attempts:</label>
+                        <input class="form-input" type="number" name="max_attempts" id="max_attempts" value="1" required>
                     </div>
 
-                    <div class="review-options-container">
+                    <div class="form-group">
                         <label>Allow student to view questions and answers after quiz?</label><br>
                         <select name="allow_review" class="form-select">
                             <option value="1">Yes</option>

@@ -220,8 +220,16 @@ $selected_quiz = $_POST['quiz'] ?? '';
             $title = $_POST['title'];
             $time_limit = $_POST['time_limit'];
             $allow_review = $_POST['allow_review'];
-            $stmt = $conn->prepare("UPDATE quizzes SET title=?, time_limit=?, allow_review=? WHERE id = ?");
-            $updated = $stmt->execute([$title, $time_limit, $allow_review, $selected_quiz]);
+            $max_attempts = $_POST['max_attempts'];
+            $is_locked = $_POST['is_locked'];
+            $title = trim($_POST['title']);
+            $time_limit = (int) $_POST['time_limit'];
+            $allow_review = (int) $_POST['allow_review'];
+            $max_attempts = (int) $_POST['max_attempts'];
+            $is_locked = (int) $_POST['is_locked'];
+
+            $stmt = $conn->prepare("UPDATE quizzes SET title=?, time_limit=?, allow_review=?,max_attempts=?,is_locked=? WHERE id = ?");
+            $updated = $stmt->execute([$title, $time_limit, $allow_review, $max_attempts, $is_locked, $selected_quiz]);
             echo $updated ? "<div class='success-message'>Quiz updated!</div>" : "<div class='error-message'>Update failed</div>";
 
             // Refresh quiz data
@@ -273,6 +281,14 @@ $selected_quiz = $_POST['quiz'] ?? '';
         <select name="allow_review">
             <option value="1" <?= $quiz_data['allow_review'] == 1 ? 'selected' : '' ?>>Yes</option>
             <option value="0" <?= $quiz_data['allow_review'] == 0 ? 'selected' : '' ?>>No</option>
+        </select>
+        <label for="max_attempts">Max Attempts:</label>
+        <input type="number" name="max_attempts" value="<?= htmlspecialchars($quiz_data['max_attempts']) ?>" required>
+
+        <label for="is_locked">Lock Quiz:</label>
+        <select name="is_locked">
+        <option value="0" <?= $quiz_data['is_locked'] == 0 ? 'selected' : '' ?>>Unlocked</option>
+        <option value="1" <?= $quiz_data['is_locked'] == 1 ? 'selected' : '' ?>>Locked</option>
         </select>
 
         <input type="submit" name="update_quiz" value="Update Quiz">

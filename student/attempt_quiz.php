@@ -7,19 +7,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     exit();
 }
 
-$quiz_id = $_GET['quiz_id'] ?? null;
 $student_id = $_SESSION['user_id'] ?? null;
-$time_limit = $_GET['time_limit'] ?? null;
+$quiz_id = $_GET['quiz_id'] ?? null;
+$course_id = $_GET['course_id'] ?? null;
+
 if (!$student_id) {
     die("Invalid request.");
 }
-$sql = "SELECT time_limit FROM quizzes WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->execute([$quiz_id]);
-$time_limit_min = $stmt->fetchColumn(); // in minutes
 
-$time_limit_seconds = $time_limit_min * 60; // convert to seconds
-// ❌ Check if the student is disqualified
+// Check if the student is disqualified
 $sql = "SELECT disqualified FROM violations WHERE student_id = ? AND quiz_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->execute([$student_id, $quiz_id]);
@@ -29,37 +25,52 @@ if ($violation && $violation['disqualified']) {
     die("<h2>You are disqualified from this quiz. Contact your teacher.</h2>");
 }
 
-$quiz_id = $_GET['quiz_id'] ?? null;
-$student_id = $_SESSION['user_id'] ?? null; // Assuming student_id is stored in session
+// Fetch quiz settings if quiz_id is available
+if ($quiz_id) {
+    $stmt = $conn->prepare("SELECT max_attempts, time_limit, is_locked FROM quizzes WHERE id = ?");
+    $stmt->execute([$quiz_id]);
+    $quiz = $stmt->fetch();
 
-if (!$student_id) {
-    die("Invalid request.");
+    if (!$quiz) {
+        echo "Invalid quiz.";
+        exit;
+    }
+
+    // Check if locked
+    if ($quiz['is_locked']) {
+        echo "<script>alert('This quiz is currently locked by the teacher.'); window.location.href='dashboard.php';</script>";
+        exit;
+    }
+
+    // Check student's attempts
+    $stmt = $conn->prepare("SELECT MAX(attempt_number) FROM quiz_results WHERE student_id = ? AND quiz_id = ?");
+    $stmt->execute([$student_id, $quiz_id]);
+    $attempt_count = $stmt->fetchColumn() ?? 0;
+
+    if ($attempt_count >= $quiz['max_attempts']) {
+        echo "<script>alert('You have reached the maximum number of attempts for this quiz.'); window.location.href='dashboard.php';</script>";
+        exit;
+    }
 }
 
-// Check if the student is disqualified from the quiz
-$sql = "SELECT disqualified FROM violations WHERE student_id = ? AND quiz_id = ?";
+
+// Get time limit
+$sql = "SELECT time_limit FROM quizzes WHERE id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->execute([$student_id, $quiz_id]);
-$violation = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->execute([$quiz_id]);
+$time_limit_min = $stmt->fetchColumn();
+$time_limit_seconds = $time_limit_min * 60;
 
-if ($violation && $violation['disqualified']) {
-    die("You are disqualified from this quiz. Contact your teacher for assistance.");
-}
 // Fetch courses the student is enrolled in
 $sql = "SELECT c.id, c.title FROM courses c
         JOIN enrollments e ON c.id = e.course_id
         WHERE e.student_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$student_id]);
 $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Get selected course & quiz
-$course_id = $_GET['course_id'] ?? null;
-$quiz_id = $_GET['quiz_id'] ?? null;
-$quizzes = [];
-$questions = [];
-
 // Fetch quizzes for the selected course
+$quizzes = [];
 if ($course_id) {
     $sql = "SELECT * FROM quizzes WHERE course_id = ?";
     $stmt = $conn->prepare($sql);
@@ -68,6 +79,7 @@ if ($course_id) {
 }
 
 // Fetch questions for the selected quiz
+$questions = [];
 if ($quiz_id) {
     $sql = "SELECT * FROM questions WHERE quiz_id = ?";
     $stmt = $conn->prepare($sql);
@@ -75,7 +87,7 @@ if ($quiz_id) {
     $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Fetch quiz title if quiz is selected
+// Fetch quiz title
 $quiz_title = "";
 if ($quiz_id) {
     $sql = "SELECT title FROM quizzes WHERE id = ?";
@@ -87,7 +99,7 @@ if ($quiz_id) {
     }
 }
 
-// Fetch course title if course is selected
+// Fetch course title
 $course_title = "";
 if ($course_id) {
     $sql = "SELECT title FROM courses WHERE id = ?";
@@ -103,12 +115,13 @@ if ($course_id) {
 $user_name = "";
 $sql = "SELECT name FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$student_id]);
 $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($user_data) {
     $user_name = $user_data['name'];
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

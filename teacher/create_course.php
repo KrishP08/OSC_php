@@ -11,13 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
     $description = $_POST['description'];
     $teacher_id = $_SESSION['user_id'];
+    $quiz_only = isset($_POST['quiz_only']) ? 1 : 0;
 
     try {
-        $stmt = $conn->prepare("INSERT INTO courses (title, description, teacher_id) VALUES (:title, :description, :teacher_id)");
+        $stmt = $conn->prepare("INSERT INTO courses (title, description, teacher_id,quiz_only) VALUES (:title, :description,:teacher_id,:quiz_only)");
         $stmt->bindParam(":title", $title, PDO::PARAM_STR);
         $stmt->bindParam(":description", $description, PDO::PARAM_STR);
         $stmt->bindParam(":teacher_id", $teacher_id, PDO::PARAM_INT);
-
+        $stmt->bindParam(":quiz_only", $quiz_only, PDO::PARAM_BOOL);
         if ($stmt->execute()) {
             $success_message = "Course created successfully!";
         } else {
@@ -414,7 +415,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label class="form-label">Title:</label>
                             <input type="text" name="title" class="form-input" required>
                         </div>
-
+                        
+                        <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="quiz_only" value="1" <?php if (!empty($course['quiz_only'])) echo 'checked'; ?>>
+                            Quiz Only Course
+                        </label>
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Description:</label>
                             <textarea name="description" class="form-textarea" required></textarea>

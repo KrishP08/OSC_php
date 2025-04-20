@@ -2,7 +2,7 @@
 session_start();
 require_once "../config/db.php";
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'quiz_only') {
     header("Location: ../public/login.php");
     exit();
 }
@@ -68,16 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':total_questions' => $total_questions,
         ':percentage' => $percentage
     ]);
-    // Get current attempt count for the student on this quiz
-    $stmt = $conn->prepare("SELECT MAX(attempt_number) FROM quiz_results WHERE student_id = ? AND quiz_id = ?");
-    $stmt->execute([$student_id, $quiz_id]);
-    $current_attempt = $stmt->fetchColumn();
-    $next_attempt = $current_attempt ? $current_attempt + 1 : 1;
-
-    // Insert into quiz_results with the attempt number
-    $stmt = $conn->prepare("INSERT INTO quiz_results (student_id, quiz_id, score, attempt_number) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$student_id, $quiz_id, $score, $next_attempt]);
-
 
     header("Location: view_result.php?quiz_id=$quiz_id");
     exit();
