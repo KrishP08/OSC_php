@@ -64,6 +64,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'quiz_only') {
 
     <a href="attempt_quiz.php" class="btn">Attempt Quiz</a>
     <a href="view_attempted_quiz.php" class="btn">View Attempted Quizzes</a>
+    <a href="../public/password_change.php" class="btn">Change Password</a>
     <a href="../public/logout.php" class="btn" style="background-color: #dc3545;">Logout</a>
 </div>
 

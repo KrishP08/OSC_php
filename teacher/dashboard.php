@@ -755,6 +755,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                 <span class="footer-text"><a href="view_violations.php">View Disqualified Students</a>
                 </span>
               </div>
+              <div class="footer-item">
+                <div class="footer-icon">
+                  <img
+                    loading="lazy"
+                    src="https://cdn.builder.io/api/v1/image/assets/47dff2ad50354820a55155efd8d95052/135b0a051827b3f9bcc90bbc1f4ab1b608bc4aecb0d4e46f3aad275fad02b53b?apiKey=47dff2ad50354820a55155efd8d95052&"
+                    class="nav-icon-img"
+                    alt=""
+                  />
+                </div>
+                <span class="footer-text"><a href="../public/password_change.php">Change Password</a>
+                </span>
+              </div>
                 <li class="nav-item">
                 <div class="nav-icon">
                   <img

@@ -520,6 +520,15 @@ $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
           <a href="view_attempted_quiz.php" class="action-button">View</a>
         </section>
+        <section class="action-card">
+          <div>
+            <h3 class="card-title">Change Password</h3>
+            <p class="card-description">
+              Change Password
+            </p>
+          </div>
+          <a href="../public/password_change.php" class="action-button">Change</a>
+        </section>
 
         <section class="action-card">
           <div>
