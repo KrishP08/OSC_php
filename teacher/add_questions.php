@@ -578,6 +578,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['excel_submit'])) {
         document.querySelectorAll("form")[1].style.display = "block"; // Excel
     }
 }
+window.addEventListener('DOMContentLoaded', toggleForm);
 </script>
 </body>
 </html>
