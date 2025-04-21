@@ -1,49 +1,98 @@
 <?php
 session_start();
 require_once "../config/db.php";
+use PhpOffice\PhpSpreadsheet\IOFactory;
+require '../vendor/autoload.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     header("Location: ../public/login.php");
     exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $quiz_id = $_POST['quiz_id'];
-    $question_text = $_POST['question_text'];
-    $correct_option = $_POST['correct_option'];
-    $options = $_POST['options'];
-
-    // ✅ Fixed SQL for PDO
-    $sql = "INSERT INTO questions (quiz_id, question_text, correct_option) VALUES (:quiz_id, :question_text, :correct_option)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(":quiz_id", $quiz_id, PDO::PARAM_INT);
-    $stmt->bindParam(":question_text", $question_text, PDO::PARAM_STR);
-    $stmt->bindParam(":correct_option", $correct_option, PDO::PARAM_INT);
-
-    if ($stmt->execute()) {
-        $question_id = $conn->lastInsertId(); // ✅ Corrected insert_id for PDO
-
-        foreach ($options as $key => $option_text) {
-            $sql = "INSERT INTO options (question_id, option_text, option_number) VALUES (:question_id, :option_text, :option_number)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":question_id", $question_id, PDO::PARAM_INT);
-            $stmt->bindParam(":option_text", $option_text, PDO::PARAM_STR);
-            $stmt->bindParam(":option_number", $option_number, PDO::PARAM_INT);
-            $option_number = $key + 1; // Fix option numbering
-            $stmt->execute();
-        }
-        $success_message = "Question added successfully!";
-    } else {
-        $error_message = "Error adding question.";
-    }
-}
-
-// ✅ Fixed quiz retrieval query for PDO
+// --- Get quizzes for dropdown ---
 $sql = "SELECT * FROM quizzes WHERE teacher_id = :teacher_id";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(":teacher_id", $_SESSION['user_id'], PDO::PARAM_INT);
 $stmt->execute();
 $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// --- Handle manual question submission ---
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submit_question'])) {
+    $quiz_id = $_POST['quiz_id'] ?? null;
+
+    $question_text = $_POST['question_text'] ?? '';
+    $correct_option = $_POST['correct_option'] ?? '';
+    $options = $_POST['options'] ?? [];
+
+    if ($quiz_id && $question_text && $correct_option && count($options) === 4) {
+        $sql = "INSERT INTO questions (quiz_id, question_text, correct_option) VALUES (:quiz_id, :question_text, :correct_option)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":quiz_id", $quiz_id, PDO::PARAM_INT);
+        $stmt->bindParam(":question_text", $question_text, PDO::PARAM_STR);
+        $stmt->bindParam(":correct_option", $correct_option, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            $question_id = $conn->lastInsertId();
+            foreach ($options as $key => $option_text) {
+                $option_number = $key + 1;
+                $stmt = $conn->prepare("INSERT INTO options (question_id, option_text, option_number) VALUES (:question_id, :option_text, :option_number)");
+                $stmt->bindParam(":question_id", $question_id, PDO::PARAM_INT);
+                $stmt->bindParam(":option_text", $option_text, PDO::PARAM_STR);
+                $stmt->bindParam(":option_number", $option_number, PDO::PARAM_INT);
+                $stmt->execute();
+            }
+            $success_message = "Question added successfully!";
+        } else {
+            $error_message = "Error adding question.";
+        }
+    } else {
+        $error_message = "Please fill all fields properly.";
+    }
+}
+
+// --- Handle Excel upload ---
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['excel_submit'])) {
+    $quiz_id = $_POST['quiz_id'] ?? null;
+
+    if (!$quiz_id) {
+        $error_message = "Please select a quiz before uploading.";
+    } elseif (isset($_FILES['excel_file']['tmp_name']) && $_FILES['excel_file']['size'] > 0) {
+        $file = $_FILES['excel_file']['tmp_name'];
+
+        try {
+            $spreadsheet = IOFactory::load($file);
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray();
+
+            $imported = 0;
+            foreach ($rows as $index => $row) {
+                if ($index === 0) continue;
+
+                [$question_text, $opt1, $opt2, $opt3, $opt4, $correct_option] = $row;
+
+                if (!$question_text || !$opt1 || !$opt2 || !$opt3 || !$opt4 || !$correct_option) continue;
+
+                $stmt = $conn->prepare("INSERT INTO questions (quiz_id, question_text, correct_option) VALUES (?, ?, ?)");
+                $stmt->execute([$quiz_id, $question_text, $correct_option]);
+                $question_id = $conn->lastInsertId();
+
+                $options = [$opt1, $opt2, $opt3, $opt4];
+                foreach ($options as $index => $option_text) {
+                    $stmt = $conn->prepare("INSERT INTO options (question_id, option_text, option_number) VALUES (?, ?, ?)");
+                    $stmt->execute([$question_id, $option_text, $index + 1]);
+                }
+
+                $imported++;
+            }
+
+            $success_message = "$imported questions imported successfully.";
+        } catch (Exception $e) {
+            $error_message = "Error reading the Excel file: " . $e->getMessage();
+        }
+    } else {
+        $error_message = "Please upload a valid Excel file.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -245,6 +294,27 @@ $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             cursor: pointer;
             transition: background-color 0.2s;
         }
+        .file-upload-container {
+            margin-bottom: 20px;
+        }
+
+        .file-upload-label {
+            display: block;
+            color: #121417;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .file-upload-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dbe0e5;
+            border-radius: 8px;
+            font-family: "Lexend", sans-serif;
+            font-size: 14px;
+            background-color: #f8f9fa;
+        }
 
         .form-button:hover {
             background-color: #0a6ad0;
@@ -425,44 +495,89 @@ $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="message error-message"><?php echo $error_message; ?></div>
                 <?php endif; ?>
 
-                <div class="form-container">
-                    <form method="POST">
-                        <div class="form-group">
-                            <label class="form-label">Select Quiz:</label>
-                            <select name="quiz_id" class="form-select" required>
-                                <?php foreach ($quizzes as $row): ?>
-                                    <option value="<?php echo htmlspecialchars($row['id']); ?>">
-                                        <?php echo htmlspecialchars($row['title']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Question:</label>
-                            <textarea name="question_text" class="form-textarea" required></textarea>
-                        </div>
+                <!-- Mode Switcher -->
+                <div class="form-group">
+                    <label class="form-label">Add Questions:</label>
+                    <select id="questionMode" onchange="toggleForm()" class="form-select">
+                        <option value="manual">Add One-by-One</option>
+                        <option value="excel">Import from Excel</option>
+                    </select>
+                </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Options:</label>
-                            <input type="text" name="options[]" class="form-input" required placeholder="Option 1">
-                            <input type="text" name="options[]" class="form-input" required placeholder="Option 2">
-                            <input type="text" name="options[]" class="form-input" required placeholder="Option 3">
-                            <input type="text" name="options[]" class="form-input" required placeholder="Option 4">
-                        </div>
+               <!-- Manual Question Form -->
+                <form method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Select Quiz:</label>
+                        <select name="quiz_id" class="form-select" required>
+                            <?php foreach ($quizzes as $row): ?>
+                                <option value="<?php echo htmlspecialchars($row['id']); ?>">
+                                    <?php echo htmlspecialchars($row['title']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Correct Option (1-4):</label>
-                            <input type="number" name="correct_option" class="form-input" min="1" max="4" required>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Question:</label>
+                        <textarea name="question_text" class="form-textarea" required></textarea>
+                    </div>
 
-                        <button type="submit" class="form-button">Add Question</button>
-                    </form>
+                    <div class="form-group">
+                        <label class="form-label">Options:</label>
+                        <input type="text" name="options[]" class="form-input" placeholder="Option 1" required>
+                        <input type="text" name="options[]" class="form-input" placeholder="Option 2" required>
+                        <input type="text" name="options[]" class="form-input" placeholder="Option 3" required>
+                        <input type="text" name="options[]" class="form-input" placeholder="Option 4" required>
+                    </div>
 
+                    <div class="form-group">
+                        <label class="form-label">Correct Option (1-4):</label>
+                        <input type="number" name="correct_option" class="form-input" min="1" max="4" required>
+                    </div>
+
+                    <button type="submit" name="submit_question" class="form-button">Add Question</button>
+                </form>
+
+                
+               <!-- Excel Import Form -->
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="form-label">Select Quiz:</label>
+                        <select name="quiz_id" class="form-select" required>
+                            <?php foreach ($quizzes as $row): ?>
+                                <option value="<?php echo htmlspecialchars($row['id']); ?>">
+                                    <?php echo htmlspecialchars($row['title']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="file-upload-container">
+                        <input type="hidden" name="excel_submit" value="1">
+                        <label class="file-upload-label">Select Excel File (.xlsx):</label>
+                        <input type="file" name="excel_file" accept=".xlsx" class="file-upload-input" required>
+                    </div>
+                    <a href="../uploads/template.xlsx" class="back-link" download>Download Excel Template</a><br><br>
+                    <button type="submit" class="form-button">Upload & Import</button>
+                </form>
+                
                     <a href="dashboard.php" class="back-link">Back to Dashboard</a>
                 </div>
             </section>
         </main>
     </div>
+    <script>
+ function toggleForm() {
+    const mode = document.getElementById('questionMode').value;
+    document.querySelectorAll("form").forEach(form => form.style.display = "none");
+
+    if (mode === "manual") {
+        document.querySelectorAll("form")[0].style.display = "block"; // Manual
+    } else {
+        document.querySelectorAll("form")[1].style.display = "block"; // Excel
+    }
+}
+</script>
 </body>
 </html>
