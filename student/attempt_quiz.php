@@ -787,6 +787,8 @@ a {
                     startTimer();
 
                     enableFullScreen();
+
+                    startQuiz();
                 });
             }
 
@@ -808,6 +810,18 @@ a {
                 let seconds = timeLeft % 60;
                 timer.textContent = "Time remaining: " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
             }
+            
+            function startQuiz() {
+                const links = document.querySelectorAll("a");
+                links.forEach(link => {
+                    link.style.pointerEvents = "none"; // Prevents clicking
+                    link.style.opacity = "0.5";        // Dims the link
+                    link.style.cursor = "not-allowed"; // Shows "not-allowed" cursor
+                });
+
+                console.log("Quiz started. All links disabled.");
+            }
+
 
             function enableFullScreen() {
                 let doc = document.documentElement;
