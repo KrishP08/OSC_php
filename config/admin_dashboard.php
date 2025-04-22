@@ -9,9 +9,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 // Count stats
-$userCount = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn();
+// Exclude admin from total user count
+$userCount = $conn->query("SELECT COUNT(*) FROM users WHERE role != 'admin'")->fetchColumn();
 $quizCount = $conn->query("SELECT COUNT(*) FROM quizzes")->fetchColumn();
-$questionCount = $conn->query("SELECT COUNT(*) FROM questions")->fetchColumn();
+$coursesCount = $conn->query("SELECT COUNT(*) FROM courses")->fetchColumn();
+// Count user roles
+$studentCount = $conn->query("SELECT COUNT(*) FROM users WHERE role = 'student'")->fetchColumn();
+$teacherCount = $conn->query("SELECT COUNT(*) FROM users WHERE role = 'teacher'")->fetchColumn();
+$quizOnlyCount = $conn->query("SELECT COUNT(*) FROM users WHERE role = 'quiz_only'")->fetchColumn();
+
+
 ?>
 
 <!DOCTYPE html>
@@ -27,26 +34,52 @@ $questionCount = $conn->query("SELECT COUNT(*) FROM questions")->fetchColumn();
 
     <div class="row mb-4">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Total Users</h5>
-                    <p class="card-text fs-4"><?= $userCount ?></p>
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <p class="card-text fs-4"><?= $userCount ?></p>
+
+                <div class="row text-white mt-3">
+                    <div class="col-4 border-end">
+                        <div class="text-center">
+                            <small>👨‍🏫</small><br>
+                            <strong><?= $teacherCount ?></strong><br>
+                            <small>Teachers</small>
+                        </div>
+                    </div>
+                    <div class="col-4 border-end">
+                        <div class="text-center">
+                            <small>🎓</small><br>
+                            <strong><?= $studentCount ?></strong><br>
+                            <small>Students</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="text-center">
+                            <small>📝</small><br>
+                            <strong><?= $quizOnlyCount ?></strong><br>
+                            <small>Quiz Only</small>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
+    </div>
+
         <div class="col-md-4">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Total Quizzes</h5>
-                    <p class="card-text fs-4"><?= $quizCount ?></p>
+                    <h5 class="card-title">Total Cousers</h5>
+                    <p class="card-text fs-4"><?= $coursesCount ?></p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Total Questions</h5>
-                    <p class="card-text fs-4"><?= $questionCount ?></p>
+                    <h5 class="card-title">Total Quizzes</h5>
+                    <p class="card-text fs-4"><?= $quizCount ?></p>
                 </div>
             </div>
         </div>
@@ -56,8 +89,8 @@ $questionCount = $conn->query("SELECT COUNT(*) FROM questions")->fetchColumn();
     <div class="list-group">
         <a href="manage_users.php" class="list-group-item list-group-item-action">Manage Users</a>
         <a href="import_users.php" class="list-group-item list-group-item-action">Import Users from Excel</a>
+        <a href="manage_cousers.php" class="list-group-item list-group-item-action">Manage Cousers</a>
         <a href="manage_quizzes.php" class="list-group-item list-group-item-action">Manage Quizzes</a>
-        <a href="add_questions.php" class="list-group-item list-group-item-action">Add or Import Questions</a>
         <a href="../logout.php" class="list-group-item list-group-item-action text-danger">Logout</a>
     </div>
 </div>
