@@ -9,7 +9,7 @@ if ($_SESSION['role'] !== 'admin') {
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $user_id = $_POST['user_id'];
+    $user_id = $_POST['id'];
     $new_password = $_POST['new_password'];
 
     if (!empty($user_id) && !empty($new_password)) {
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 // Fetch users for dropdown
-$users = $conn->query("SELECT id, username FROM users")->fetchAll(PDO::FETCH_ASSOC);
+$users = $conn->query("SELECT id,name FROM users")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +40,7 @@ $users = $conn->query("SELECT id, username FROM users")->fetchAll(PDO::FETCH_ASS
         <select name="user_id" required>
             <option value="">-- Choose --</option>
             <?php foreach ($users as $user): ?>
-                <option value="<?= $user['id'] ?>"><?= htmlspecialchars($user['username']) ?></option>
+                <option value="<?= $user['id'] ?>"><?= htmlspecialchars($user['name']) ?></option>
             <?php endforeach; ?>
         </select><br><br>
 

@@ -18,7 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user['role'] === 'teacher') {
             header("Location: ../teacher/dashboard.php");
         } elseif ($user['role'] === 'quiz_only') {
-          header("Location: ../quiz/dashboard.php");
+          header("Location: ../quiz/dashboard.php");}
+          elseif ($user['role'] === 'admin') {
+          header("Location: ../config/admin_dashboard.php");
         } else{
             header("Location: ../student/dashboard.php");
         }
@@ -91,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <label class="flex flex-col min-w-40 flex-1">
                 <p class="text-[#111418] text-base font-medium leading-normal pb-2">Username or email</p>
                 <input
-                  type="email" name="email" required
+                  type="text" name="email" required
                   placeholder="example@gmail.com"
                   class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111418] focus:outline-0 focus:ring-0 border border-[#dce0e5] bg-white focus:border-[#dce0e5] h-14 placeholder:text-[#637588] p-[15px] text-base font-normal leading-normal"
                   value=""
