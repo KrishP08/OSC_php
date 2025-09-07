@@ -1,0 +1,28 @@
+Of course. Here is the text in Markdown format as you requested:
+
+Effective Date: March 7, 2025
+
+**1. Acceptance of Terms**
+By using or contributing to OSC_php, you agree to these Terms of Service ("TOS").
+
+**2. Scope**
+These terms apply to your use of OSC_php, including all code, documentation, assets, and related services.
+
+**3. Usage and Contribution**
+OSC_php is open-source and licensed for voluntary modification, distribution, and contribution.
+Respect the existing open-source license (as declared in your README). Contributions are accepted under the same license terms.
+
+**4. No Warranty**
+OSC_php is provided “as-is” without any warranties of performance or fitness. You use it at your own risk.
+
+**5. Limitation of Liability**
+Under no circumstances shall the project author or contributors be liable for any damages, including data loss, downtime, or business interruption.
+
+**6. Intellectual Property**
+The author retains copyright. By contributing (pull requests, issues, etc.), you affirm that your contributions are original or used with permission and grant a perpetual, royalty-free license to include them.
+
+**7. Acceptable Use**
+You must not use OSC_php to facilitate illegal or harmful activities. The author reserves the right to restrict access to individuals violating this clause.
+
+**8. Changes to Terms**
+These Terms of Service may be updated—it's your responsibility to review them periodically.
