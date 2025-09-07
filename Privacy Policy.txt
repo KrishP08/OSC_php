@@ -1,0 +1,31 @@
+Effective Date: March 7, 2025
+
+**1. Data Collected Automatically**
+If you deploy OSC_php publicly with user registration (students/teachers), you may collect:
+* Registration details (name, email, username, password)
+* Activity logs (e.g., submissions, quiz results)
+* System data (IP address, browser data, timestamps)
+
+**2. Purpose of Collection**
+Collected data enables:
+* User authentication and account management
+* Submission tracking, grading, and notifications
+* Analytics for improving OSC_php functionality
+
+**3. Data Sharing**
+Your policy should clarify that data is not shared with third parties—unless legally required, or unless users consent, or in case of an official investigation.
+
+**4. Data Storage and Security**
+Detail how data is stored (e.g. in MySQL locally). Encourage use of secure practices: HTTPS, hashed passwords, backups, and server security.
+
+**5. Cookies and Tracking**
+If applicable, mention the use of cookies or session data.
+
+**6. User Rights**
+Users can request data correction or account deletion (if such functionality exists or will exist).
+
+**7. Children**
+If OSC_php is used by minors, disclose whether parental consent is required (COPPA, GDPR, etc.).
+
+**8. Updates to Policy**
+Privacy Policy may be updated over time; users should be notified accordingly.
